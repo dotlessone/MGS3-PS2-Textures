@@ -1,0 +1,1 @@
+//todo - regex for all npot's in the mc version so we can automatically identify ui textures. remove this line when done.
