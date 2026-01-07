@@ -94,8 +94,8 @@ def main() -> None:
     print(f"Found {len(sol_hashes)} unique case-insensitive stems in Snake Eater Final Rebuilt.")
     print(f"Found {len(subs_hashes)} unique case-insensitive stems in Substance Final Rebuilt.")
 
-    sol_unix = get_unix_timestamp_jst(2001, 9, 27, 22, 17, 38)
-    subs_unix = get_unix_timestamp_jst(2002, 10, 24, 11, 31, 17)
+    sol_unix = get_unix_timestamp_jst(2004, 10, 30, 07, 56, 05) #seater US - http://redump.org/disc/217/
+    subs_unix = get_unix_timestamp_jst(2005, 12, 01, 03, 52, 46) #subsistence US - http://redump.org/disc/429/
 
     csv_out.parent.mkdir(parents=True, exist_ok=True)
 
