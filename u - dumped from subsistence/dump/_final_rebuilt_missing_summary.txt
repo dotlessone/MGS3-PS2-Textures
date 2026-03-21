@@ -1,0 +1,37 @@
+Dump root: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump
+Final rebuilt dir: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump\Final Rebuilt
+Texture map CSV: C:\Development\Git\MGS-Tri-Dumper\mgs3_texture_map.csv
+SLOT mapping CSV: C:\Development\Git\MGS-Tri-Dumper\mgs3\extracted\SLOT\slot_number_to_name.csv
+
+Unique texture filenames in texture map: 9,783
+Unique texture filenames in Final Rebuilt: 9,580
+Missing texture filenames from Final Rebuilt: 203
+Stages with leftover files in dump: 16
+Leftover stages with missing textures: 16
+Missing texture/stage pairs across leftover stages: 448
+Files needing 00 padding: 0
+
+=== TEXTURE MAP LOAD ISSUES ===
+Line 72834: expected 4 columns, got 1
+
+=== LEFTOVER STAGES IN DUMP ===
+net
+s032b_0
+s051b_0
+s053a
+s055a
+s056a
+s063a_0
+s081a_0
+s101a
+s101b
+s112a
+s112a_0
+s141a_0
+title
+v005a_0
+v005a_2
+
+All missing log: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump\_final_rebuilt_missing_all.txt
+Leftover-stage missing log: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump\_final_rebuilt_missing_leftover_stages_only.txt
+Padding-needed log: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump\_final_rebuilt_padding_needed.csv

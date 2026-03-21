@@ -315,7 +315,7 @@ def menu_loop(
     by_name: dict[str, set[tuple[str, str]]],
 ) -> None:
     while True:
-        print_header("MGS2 Texture Map Lookup")
+        print_header("MGS3 Texture Map Lookup")
         print("1. Find unique textures from tri strcode")
         print("2. Find unique textures from texture strcode")
         print("3. Find unique textures from stage")

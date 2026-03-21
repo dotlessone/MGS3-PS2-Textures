@@ -85,14 +85,14 @@ def main() -> None:
 
     print(f"Git root: {repo_root}")
     print(f"Snake Eater dir: {sol_root}")
-    print(f"Substance dir:       {subs_root}")
+    print(f"Subsistence dir:       {subs_root}")
     print(f"Output CSV:          {csv_out}")
 
     sol_hashes = collect_tga_hashes(sol_root, "Snake Eater")
-    subs_hashes = collect_tga_hashes(subs_root, "Substance")
+    subs_hashes = collect_tga_hashes(subs_root, "Subsistence")
 
     print(f"Found {len(sol_hashes)} unique case-insensitive stems in Snake Eater Final Rebuilt.")
-    print(f"Found {len(subs_hashes)} unique case-insensitive stems in Substance Final Rebuilt.")
+    print(f"Found {len(subs_hashes)} unique case-insensitive stems in Subsistence Final Rebuilt.")
 
     sol_unix = get_unix_timestamp_jst(2004, 10, 30, 07, 56, 05) #seater US - http://redump.org/disc/217/
     subs_unix = get_unix_timestamp_jst(2005, 12, 01, 03, 52, 46) #subsistence US - http://redump.org/disc/429/

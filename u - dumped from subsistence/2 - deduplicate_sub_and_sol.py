@@ -79,7 +79,7 @@ def main():
     print("Scanning folders...")
     subsistence_files = gather_tgas(SUBSTANCE_DIR)
     sol_files = gather_tgas(SOL_DIR)
-    print(f"  Substance: {len(subsistence_files)} files")
+    print(f"  Subsistence: {len(subsistence_files)} files")
     print(f"  SoL:       {len(sol_files)} files")
 
     rel_paths = sorted(set(sol_files.keys()) | set(subsistence_files.keys()), key=lambda p: str(p).lower())
@@ -116,7 +116,7 @@ def main():
             else:
                 return ("failed_delete", rel_path)
         else:
-            return ("mismatch", f"{rel_path} | Substance: {sub_crc:08X} | SoL: {sol_crc:08X}")
+            return ("mismatch", f"{rel_path} | Subsistence: {sub_crc:08X} | SoL: {sol_crc:08X}")
 
     print("\nComparing files (multithreaded)...")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -149,12 +149,12 @@ def main():
     with open(LOG_FILE, "w", encoding="utf-8") as log:
         log.write(f"CRC32 Deduplication Log - {datetime.now()}\n")
         log.write(f"Threads used: {MAX_WORKERS}\n\n")
-        log.write(f"Substance: {SUBSTANCE_DIR}\n")
+        log.write(f"Subsistence: {SUBSTANCE_DIR}\n")
         log.write(f"SoL: {SOL_DIR}\n\n")
         log.write(f"Deleted SoL files: {deleted}\n")
         log.write(f"Empty SoL folders removed: {removed_dirs}\n")
         log.write(f"Missing in SoL: {len(missing_in_sol)}\n")
-        log.write(f"Missing in Substance: {len(missing_in_subsistence)}\n")
+        log.write(f"Missing in Subsistence: {len(missing_in_subsistence)}\n")
         log.write(f"Mismatched CRC32s: {len(mismatched)}\n\n")
 
         log.write("\n--- Deleted Files ---\n\n")
@@ -169,7 +169,7 @@ def main():
         for m in missing_in_sol:
             log.write(m + "\n")
 
-        log.write("\n--- Missing in Substance ---\n\n")
+        log.write("\n--- Missing in Subsistence ---\n\n")
         for m in missing_in_subsistence:
             log.write(m + "\n")
 
