@@ -1,0 +1,17 @@
+Dump root: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump
+Final rebuilt dir: C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\dump\Final Rebuilt
+Texture map CSV: C:\Development\Git\MGS-Tri-Dumper\mgs3_texture_map.csv
+SLOT mapping CSV: C:\Development\Git\MGS-Tri-Dumper\mgs3\extracted\SLOT\slot_number_to_name.csv
+Max workers: 24
+
+Total scanned .tga files: 117
+Matched source candidates: 0
+Hashed source candidates: 0
+Target groups: 0
+Ambiguous matches: 0
+Unmatched files: 117
+
+=== TEXTURE MAP LOAD ISSUES ===
+Line 72834: expected 4 columns, got 1
+
+=== ACTIONS ===
