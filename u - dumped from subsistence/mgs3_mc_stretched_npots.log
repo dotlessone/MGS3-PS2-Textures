@@ -893,6 +893,7 @@ jet_enjinp.bmp
 jet_enjinp02.bmp
 jet_enjinp03.bmp
 jngl_eda1_alp_ovl.bmp
+jngl_happa04_alp_ovl_mip16000.bmp_c82c791b86086ed52d483520273e9b5b
 jonny_familiy_01.bmp
 katu_door_light_blue_alp_add_tr.trans.bmp
 katu_door_light_red_alp_add_tr.trans.bmp
@@ -1133,7 +1134,6 @@ mog_floor_17.bmp
 mog_floor_alp_ovl_06.bmp
 mog_floor_alp_ovl_20.bmp
 mog_floor_alp_ovl_21.bmp
-mog_floor_rep_13.bmp
 mog_font_alp_ovl_01.bmp
 mog_gatedoor00.bmp
 mog_ladder_step_01.bmp
@@ -1150,7 +1150,6 @@ mog_pillar_05.bmp
 mog_pillar_07.bmp
 mog_pillar_09.bmp
 mog_pillar_10.bmp
-mog_pillar_rep_02.bmp
 mog_rail_04.bmp
 mog_rail_06.bmp
 mog_roof_decal_02.bmp
@@ -1158,12 +1157,10 @@ mog_sdw_alp_ovl_07.bmp
 mog_sdw_alp_ovl_07.bmp_77d049969cfa5773411d22bc42892033
 mog_sdw_alp_ovl_14.bmp
 mog_sdw_alp_ovl_17.bmp
-mog_shago_base_rep_02.bmp
 mog_stain_alp_ovl_03.bmp
 mog_step_alp_ovl_03.bmp
 mog_step_alp_ovl_04.bmp
 mog_wall_16.bmp
-mog_wall_rep_10.bmp
 moon_s002a_alp_ovl.bmp
 mor_def.bmp
 mr_light_a00_alp_ovl.bmp
@@ -1539,6 +1536,7 @@ rex_tail_u03.bmp
 rex_thigh_b01.bmp
 rex_thigh_b02.bmp
 rex_thigh_b03.bmp
+rex_thigh_f01.bmp
 rex_thigh_f02.bmp
 rex_thigh_s01in.bmp
 rex_thigh_s01out.bmp
@@ -1554,6 +1552,7 @@ rex_toe_f.bmp
 rex_toe_s.bmp
 rex_toe_t.bmp
 rex_toe_u.bmp
+rex_waist_b01.bmp
 rex_waist_b02.bmp
 rex_waist_f01.bmp
 rex_waist_f02.bmp
@@ -1607,7 +1606,6 @@ s006a_book1.bmp
 s006a_book1_s1.bmp
 s006a_book1_s2.bmp
 s006a_book2.bmp
-s006a_brickwall2_rep_v2.bmp
 s006a_cable1_alp_ovl.bmp
 s006a_cbox1.bmp
 s006a_cbox2.bmp
@@ -1626,11 +1624,8 @@ s006a_meter1.bmp
 s006a_paperbox1.bmp
 s006a_shelf_tenban1.bmp
 s006a_step_floor.bmp
-s022a_ara_conk_rep.bmp
 s022a_glass_def_alp.trans.bmp
-s022a_pipe_rep01.bmp
 s022a_stfance01.bmp
-s022a_wall_rep05.bmp
 s041a_tree00.bmp
 s041a_tree01.bmp
 s041a_treebg_00_alp_ovl.bmp
@@ -1680,7 +1675,6 @@ s051a_44wall02b.bmp
 s052a_door_light_01_alp_ovl.bmp
 s052a_door_light_04.bmp
 s052a_ent_03_kage_01_alp_ovl.bmp
-s052a_ent_floor_02_rep.bmp
 s052a_ent_kage_04_alp_ovl.bmp
 s052a_ent_kage_05_alp_ovl.bmp
 s052a_ent_mat.bmp
@@ -1772,6 +1766,8 @@ s053a_winframe_b00.bmp_285bcca3d7bf300b4939941595f2c8f2
 s053a_winframe_c00.bmp
 s053a_winframe_c00.bmp_f9f0e4fa200ee684e587992f1eed2a7f
 s053a_winframe_d00.bmp
+s054_shadow02_alp_ovl.bmp
+s054_shadow_alp_ovl.bmp
 s054a_256floor.bmp
 s054a_award00.bmp
 s054a_award00.bmp_cb817e0fe4875cfafe302b7651472bf8
@@ -1956,8 +1952,6 @@ s062a_pictur_alp_ovl06.bmp
 s062a_pillow01.bmp
 s062a_wframe01.bmp
 s062a_wodbrk02_alp_ovl.bmp
-s063a_small_tree3_rep.bmp
-s063a_thin_tree1_rep.bmp
 s066a_drfl00.bmp
 s066a_fl01a2_alp_ovl.bmp
 s066a_fl01a3_alp_ovl.bmp
@@ -1968,9 +1962,7 @@ s066a_pipe00_alp_ovl.bmp
 s066a_pipe01_alp_ovl.bmp
 s066a_wallrusty02a.bmp
 s072a_door_mark01_alp_ovl.bmp
-s072a_wood_a01_rep.bmp
 s073a_door_mark01_alp_ovl.bmp
-s073a_wood_b03_rep.bmp
 s074a_door_00.bmp
 s074a_fr.bmp
 s074a_kusa2_alp_ovl.bmp
@@ -2102,13 +2094,11 @@ s091a_lit1_add_alp_ovl.bmp
 s091a_mach04a.bmp
 s091a_mark00_alp_ovl.bmp
 s091a_mog_door_02.bmp
-s091a_mog_roof_rep_01.bmp_f4b772bfb171739bee5668666faa19c4
 s091a_mog_window.bmp
 s091a_objbox00.bmp
 s091a_objdct00.bmp
 s091a_objdct01.bmp
 s091a_objdct02.bmp
-s091a_pipe00a_rep.bmp
 s091a_pipeb.bmp
 s091a_pipec.bmp
 s091a_pnl00.bmp
@@ -2122,7 +2112,6 @@ s091a_pole00a.bmp_a63e79100eeefa89865c80b340ee0d31
 s091a_pole00b.bmp
 s091a_posta.bmp
 s091a_s101a_winglassa_alp_ovl.bmp
-s091a_sewerfl00a_rep.bmp
 s091a_sewerfl00c2_alp_ovl.bmp
 s091a_sewerfl00c_alp_ovl.bmp
 s091a_shelfa.bmp
@@ -2456,7 +2445,6 @@ s152a_room_hari_01.bmp
 s152a_room_hari_02.bmp
 s152a_room_kage_02_alp_ovl.bmp
 s152a_room_pipe02_04.bmp
-s152a_room_pipe_01_rep.bmp
 s161a_deco_num_01_alp_ovl.bmp
 s161a_deco_num_01_alp_ovl.bmp_603002bcc788caac6843d20a2e449d00
 s161a_deco_num_01_alp_ovl.bmp_c143fd6d078b082d2985ddb94f9cb08e
@@ -2534,7 +2522,6 @@ s171a_mo_box_03.bmp
 s171a_mo_bridge_02.bmp
 s171a_mo_bridge_02.bmp_4f0f38d21ecfacf2e42b392d68b3e80b
 s171a_mo_bridge_03.bmp
-s171a_mo_cloth_alp_ovl_rep_01.bmp
 s171a_mo_fence_02.bmp
 s171a_mo_fence_04.bmp
 s171a_mo_floor_alp_ovl_03.bmp
@@ -2542,7 +2529,6 @@ s171a_mo_pillar_05.bmp
 s171a_mo_pillar_06.bmp
 s171a_mo_pillar_07.bmp
 s171a_mo_pillar_08.bmp
-s171a_mo_pillar_rep_01.bmp
 s171a_mo_pipe_02.bmp
 s171a_mo_pipe_03.bmp
 s171a_mo_river_alp_ovl_06.bmp
@@ -2552,7 +2538,6 @@ s171a_mo_sdw_alp_ovl_03.bmp
 s171a_mo_sdw_alp_ovl_12.bmp
 s171a_mo_wire_alp_01.trans.bmp
 s171a_mo_wire_alp_ovl_01.bmp
-s171a_mogi_fence_alp_ovl_rep_01.bmp
 s181a_btrt_sdw00_alp_ovl.bmp
 s221a_cabinet_00.bmp
 s221a_carpet_01_alp_ovl.bmp

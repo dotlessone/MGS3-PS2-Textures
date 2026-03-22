@@ -13,7 +13,6 @@ from collections import defaultdict
 # CONFIGURATION
 # ==========================================================
 MAX_WORKERS = max(4, os.cpu_count() or 4)
-OUTPUT_CSV = "tridump_metadata.csv"
 TMP_DIR_NAME = "_tmp_noalpha"
 LOCK = Lock()
 
@@ -191,7 +190,7 @@ def main():
 
     results.sort(key=lambda x: x[0].lower())
 
-    output_path = script_dir / OUTPUT_CSV
+    output_path = Path(r"C:\Development\Git\MGS3-PS2-Textures\u - dumped from subsistence\mgs3_ps2_dimensions.csv")
     with open(output_path, "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([
