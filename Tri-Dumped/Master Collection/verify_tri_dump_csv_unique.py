@@ -9,7 +9,7 @@ from typing import Dict, List, Set, Tuple, Iterable
 # ==========================================================
 # CONFIG
 # ==========================================================
-CSV_NAME = "mgs2_tri_mappings.csv"  # put your csv name here
+CSV_NAME = "mgs3_tri_mappings.csv"  # put your csv name here
 
 # Columns that form the "combination"
 KEY_COLUMNS = [
@@ -22,8 +22,8 @@ KEY_COLUMNS = [
 TARGET_COLUMN = "tri_name"
 
 # Output logs
-CONFLICT_LOG = "mgs2_tri_mappings_conflicts.log"
-UNIQUE_LOG = "mgs2_tri_mappings_unique.log"
+CONFLICT_LOG = "mgs3_tri_mappings_conflicts.log"
+UNIQUE_LOG = "mgs3_tri_mappings_unique.log"
 
 # If you don't care about unique mappings, set this to False
 WRITE_UNIQUE = True

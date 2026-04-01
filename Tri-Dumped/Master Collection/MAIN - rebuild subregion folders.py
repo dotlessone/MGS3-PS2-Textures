@@ -23,27 +23,39 @@ TRI_MAPPINGS_CSV = SCRIPT_DIR / "mgs3_tri_mappings.csv"
 DRY_RUN = False
 
 # Add the region folders you want to process here.
+#these are case sensitive. ALWAYS LOWERCASE THIS SHIT
 PROCESS_REGION_FOLDERS = [
-    "us",
-     #"eu",
+    #"fr",
+    #"gr",
+    #"it",
     #"jp",
+    #"sp",
+    "us",
 ]
 
 # Global manual conflict override:
 # sha1 -> texture_name
 MANUAL_CONFLICT_SHA1_OVERRIDES: Dict[str, str] = {
-    "c68cd2b9ee0a8f85984570a53f2c1a284660228d": "0009bc34",
-    #us 2003 / eu 2012
-    "ba34283c172431fa75f69d68824c7d23d92fb6c2": "0009bc34_b930b4499997afc4e26e408ea169f9c7",
-    #jp 2002 / jp 2011
-    "eda27df6e2ba6d8b30a0606f3ec5e02b4bc5fb29": "act_telop5_alp_ovl.bmp_e350349959b1556776f7b5d2e07689fc",
-    "fec0481213902971719ca44ae0962dee41bb8b22": "act_telop5_alp_ovl.bmp",
-    "af92a54b0ba148b8c8d4b7cb9607517f59f506be": "00fb5e0d",
-    #study your battle results well to know better ways of survival on the battlefield
-    "09dfa9d6264915502af8cfd4d41a5c34493dcf90": "00fb5e0d_3a2f9c020f2b36a95c909e29cb3e4aae", 
-    #study your battle results well to know better ways of survival battlefield
-    "936ee9ca2c65360f5f735a7f4d021b8abbae5742": "00fb5e0d_a4c6847d4b922f6cd44f7d23a8727f2c", 
-    #study your battle results well to know better ways of survival battlefield - black background
+        #without accents
+        "412e0576fd62960fddc48a124516aa24df13e671" : "0038f2a7",
+        #with accents
+        "a169ffa897491765c704c646e4ac4a4b012a8425" : "0038f2a7_5def0cd149f56d9b37bda645a51e60c5",
+
+        #no accents
+        "8f8ac1781dd914bc8d43c91fb1c3f79387a08b70" : "00cbee11_27d296ce65414177044e0f3611c12911",
+        #with accents
+        "9ea402e77125881c0cc2f554b3c60ea7f9e42744" : "00cbee11_58c763b0683aea3090309f6381b73880",
+
+        #empty
+        "96afb49863575f75a3e7118ed8da651e40d47772" : "00ae69df",
+        #used
+        "f22f7996467952b531b32c2db0758cdb2219589a" : "00646cce",
+        #equip
+        "3fbdc6c8e7b7e514a30c2fad19770528d89522f5" : "00456bf2",
+        #no use
+        "d09cd26f00bd3ff537b59c9ad015e86edb7efaee" : "002d265e_eabfc4a85ac1e68d7f33d0bcdb183243",
+        #line bar
+        "28e6381b785955d79c95ce2bf170585b4138df88" : "002d265e",
 }
 
 # Region-specific manual conflict override:
@@ -59,6 +71,10 @@ SHA1_KEEP_PRIORITIES: Dict[str, List[str]] = {
     #     "preferred_sha1_here",
     #     "fallback_sha1_here",
     # ],
+    
+    "0051e8d2": [
+        "f677ccc9ab99100986626e44224f2495499dd6ac",
+    ],
 }
 
 MAX_WORKERS = max(4, os.cpu_count() or 4)

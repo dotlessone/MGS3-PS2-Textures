@@ -12,7 +12,7 @@ from pathlib import Path
 # ==========================================================
 # CONFIG
 # ==========================================================
-EU_ROOT = Path(r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Working\JP")
+EU_ROOT = Path(r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\JP")
 BASE_ROOT = Path(r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection")
 
 DRY_RUN = False

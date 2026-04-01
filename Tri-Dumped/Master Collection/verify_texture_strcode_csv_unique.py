@@ -23,8 +23,8 @@ KEY_COLUMNS = [
 TARGET_COLUMN = "texture_name"
 
 # Output logs
-CONFLICT_LOG = "mgs2_texture_strcode_conflicts.log"
-UNIQUE_LOG = "mgs2_texture_strcode_unique.log"
+CONFLICT_LOG = "mgs3_texture_strcode_conflicts.log"
+UNIQUE_LOG = "mgs3_texture_strcode_unique.log"
 
 # If you don't care about unique mappings, set this to False
 WRITE_UNIQUE = True
