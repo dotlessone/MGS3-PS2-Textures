@@ -16,8 +16,8 @@ from typing import Dict, Iterable, List, Optional, Set, Tuple
 # ==========================================================
 SCRIPT_DIR = Path(__file__).resolve().parent
 
-TEXTURE_MAPPINGS_CSV = SCRIPT_DIR / "mgs2_texture_strcode_mappings.csv"
-TRI_MAPPINGS_CSV = SCRIPT_DIR / "mgs2_tri_mappings.csv"
+TEXTURE_MAPPINGS_CSV = SCRIPT_DIR / "mgs3_texture_strcode_mappings.csv"
+TRI_MAPPINGS_CSV = SCRIPT_DIR / "mgs3_tri_mappings.csv"
 
 # Dry mode is ON by default.
 DRY_RUN = False
@@ -352,7 +352,7 @@ def print_warnings(state: RegionState, warnings: List[WarningEntry]) -> None:
             print(f"  {rel}")
 
             if item.texture_strcode:
-                print(f"    lookup: mgs2 /base /{item.texture_strcode}.png")
+                print(f"    lookup: mgs3 /base /{item.texture_strcode}.png")
 
 
 def write_warnings_to_file(state: RegionState, warnings: List[WarningEntry]) -> None:
@@ -387,7 +387,7 @@ def write_warnings_to_file(state: RegionState, warnings: List[WarningEntry]) -> 
             lines.append(rel)
 
             if item.texture_strcode:
-                lines.append(f"lookup: mgs2 /base /{item.texture_strcode}.png")
+                lines.append(f"lookup: mgs3 /base /{item.texture_strcode}.png")
 
         lines.append("")
 
@@ -728,7 +728,7 @@ def prompt_for_manual_conflict_resolution(
     for index, texture_name in enumerate(candidate.possible_names, start=1):
         print(f"  {index}) {texture_name}")
 
-    lookup_string = f"mgs2 /base /<{'|'.join(candidate.possible_names)}>.png"
+    lookup_string = f"mgs3 /base /<{'|'.join(candidate.possible_names)}>.png"
 
     print()
     print("Lookup:")
