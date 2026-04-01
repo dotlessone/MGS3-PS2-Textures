@@ -16,8 +16,8 @@ from PIL import Image
 SCRIPT_DIR = Path(__file__).resolve().parent
 TARGET_DIR = SCRIPT_DIR / "_win"
 
-OUTPUT_CSV_WIN_ONLY = SCRIPT_DIR / "mgs2_mc_dimensions.csv"
-OUTPUT_CSV_FULL_RECURSIVE = SCRIPT_DIR / "mgs2_mc_dimensions_including_override_folders.csv"
+OUTPUT_CSV_WIN_ONLY = SCRIPT_DIR / "mgs3_mc_dimensions.csv"
+OUTPUT_CSV_FULL_RECURSIVE = SCRIPT_DIR / "mgs3_mc_dimensions_including_override_folders.csv"
 
 MISSING_PNG_LOG_WIN_ONLY = SCRIPT_DIR / "missing_matching_png_for_ctxr_win_only.txt"
 MISSING_PNG_LOG_FULL_RECURSIVE = SCRIPT_DIR / "missing_matching_png_for_ctxr_full_recursive.txt"
@@ -27,27 +27,27 @@ PC_NONPOW2_MATCH_LOG_FULL_RECURSIVE = SCRIPT_DIR / "pc_raw_dims_equal_ciel2_full
 
 # Optional external metadata
 VERSION_DATES_CSV = Path(
-    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_ps2_sha1_version_dates.csv"
+    r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs3_ps2_sha1_version_dates.csv"
 )
 
 MC_TRI_DUMPED_METADATA_CSV = Path(
-    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_mc_tri_dumped_metadata.csv"
+    r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs3_mc_tri_dumped_metadata.csv"
 )
 
 MANUAL_BP_REMADE_TXT = Path(
-    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_mc_manually_identified_bp_remade.txt"
+    r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs3_mc_manually_identified_bp_remade.txt"
 )
 
 MC_VERSION_DATES_CANDIDATES = [
     SCRIPT_DIR / "MC_Version_Dates.csv",
-    SCRIPT_DIR / "MGS2_MC_Version_Dates.csv",
-    SCRIPT_DIR / "MGS2_MC_Version_Dates.csv",
+    SCRIPT_DIR / "MGS3_MC_Version_Dates.csv",
+    SCRIPT_DIR / "MGS3_MC_Version_Dates.csv",
 ]
 
 MC_TEXTURE_UPDATE_VERSIONS_CANDIDATES = [
     SCRIPT_DIR / "MC_Texture_Update_Versions.csv",
-    SCRIPT_DIR / "MGS2_MC_Texture_Update_Versions.csv",
-    SCRIPT_DIR / "MGS2_MC_Texture_Update_Versions.csv",
+    SCRIPT_DIR / "MGS3_MC_Texture_Update_Versions.csv",
+    SCRIPT_DIR / "MGS3_MC_Texture_Update_Versions.csv",
 ]
 
 MAX_WORKERS = max(4, os.cpu_count() or 1)
