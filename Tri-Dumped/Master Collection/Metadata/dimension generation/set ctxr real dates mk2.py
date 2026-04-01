@@ -1,135 +1,70 @@
 from __future__ import annotations
 
 import csv
-import ctypes
 import hashlib
 import os
-import sys
-import threading
-import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from ctypes import wintypes
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
+
+from PIL import Image
 
 
 # ==========================================================
 # CONFIG
 # ==========================================================
 SCRIPT_DIR = Path(__file__).resolve().parent
+TARGET_DIR = SCRIPT_DIR / "_win"
 
-METADATA_CSV = Path(
-    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_mc_dimensions_including_override_folders.csv"
+OUTPUT_CSV_WIN_ONLY = SCRIPT_DIR / "mgs2_mc_dimensions.csv"
+OUTPUT_CSV_FULL_RECURSIVE = SCRIPT_DIR / "mgs2_mc_dimensions_including_override_folders.csv"
+
+MISSING_PNG_LOG_WIN_ONLY = SCRIPT_DIR / "missing_matching_png_for_ctxr_win_only.txt"
+MISSING_PNG_LOG_FULL_RECURSIVE = SCRIPT_DIR / "missing_matching_png_for_ctxr_full_recursive.txt"
+
+PC_NONPOW2_MATCH_LOG_WIN_ONLY = SCRIPT_DIR / "pc_raw_dims_equal_ciel2_win_only.txt"
+PC_NONPOW2_MATCH_LOG_FULL_RECURSIVE = SCRIPT_DIR / "pc_raw_dims_equal_ciel2_full_recursive.txt"
+
+# Optional external metadata
+VERSION_DATES_CSV = Path(
+    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_ps2_sha1_version_dates.csv"
 )
 
-EXE_NAME = "metal gear solid2.exe"
+MC_TRI_DUMPED_METADATA_CSV = Path(
+    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_mc_tri_dumped_metadata.csv"
+)
+
+MANUAL_BP_REMADE_TXT = Path(
+    r"C:\Development\Git\MGS2-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs2_mc_manually_identified_bp_remade.txt"
+)
+
+MC_VERSION_DATES_CANDIDATES = [
+    SCRIPT_DIR / "MC_Version_Dates.csv",
+    SCRIPT_DIR / "MGS2_MC_Version_Dates.csv",
+    SCRIPT_DIR / "MGS2_MC_Version_Dates.csv",
+]
+
+MC_TEXTURE_UPDATE_VERSIONS_CANDIDATES = [
+    SCRIPT_DIR / "MC_Texture_Update_Versions.csv",
+    SCRIPT_DIR / "MGS2_MC_Texture_Update_Versions.csv",
+    SCRIPT_DIR / "MGS2_MC_Texture_Update_Versions.csv",
+]
 
 MAX_WORKERS = max(4, os.cpu_count() or 1)
 HASH_CHUNK_SIZE = 8 * 1024 * 1024
-PROGRESS_INTERVAL_SECONDS = 1.0
 
-LOG_MATCHED = SCRIPT_DIR / "set_dates_matched.txt"
-LOG_FAILED = SCRIPT_DIR / "set_dates_failed.txt"
+PC_ORIGIN_VERSION = "Substance (PC)"
+PC_VERSION_UNIX_TIME = "1045766390"
 
+HD_ORIGIN_VERSION = "HD Collection (PS3)"
+HD_VERSION_UNIX_TIME = "1318534422"
 
-# ==========================================================
-# WINDOWS FILE TIME
-# ==========================================================
-kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-
-CreateFileW = kernel32.CreateFileW
-CreateFileW.argtypes = [
-    wintypes.LPCWSTR,
-    wintypes.DWORD,
-    wintypes.DWORD,
-    wintypes.LPVOID,
-    wintypes.DWORD,
-    wintypes.DWORD,
-    wintypes.HANDLE,
-]
-CreateFileW.restype = wintypes.HANDLE
-
-SetFileTime = kernel32.SetFileTime
-SetFileTime.argtypes = [
-    wintypes.HANDLE,
-    ctypes.POINTER(wintypes.FILETIME),
-    ctypes.POINTER(wintypes.FILETIME),
-    ctypes.POINTER(wintypes.FILETIME),
-]
-SetFileTime.restype = wintypes.BOOL
-
-CloseHandle = kernel32.CloseHandle
-CloseHandle.argtypes = [wintypes.HANDLE]
-CloseHandle.restype = wintypes.BOOL
-
-INVALID_HANDLE_VALUE = wintypes.HANDLE(-1).value
-
-GENERIC_WRITE = 0x40000000
-FILE_SHARE_READ = 0x00000001
-FILE_SHARE_WRITE = 0x00000002
-FILE_SHARE_DELETE = 0x00000004
-OPEN_EXISTING = 3
-FILE_ATTRIBUTE_NORMAL = 0x00000080
-FILE_FLAG_BACKUP_SEMANTICS = 0x02000000
-
-EPOCH_AS_FILETIME = 116444736000000000
-HUNDREDS_OF_NANOSECONDS = 10000000
-
-
-def unix_time_to_filetime(unix_time: int) -> wintypes.FILETIME:
-    filetime_value = EPOCH_AS_FILETIME + (unix_time * HUNDREDS_OF_NANOSECONDS)
-    return wintypes.FILETIME(
-        filetime_value & 0xFFFFFFFF,
-        (filetime_value >> 32) & 0xFFFFFFFF,
-    )
-
-
-def set_file_creation_and_modified_time(path: Path, unix_time: int) -> None:
-    filetime = unix_time_to_filetime(unix_time)
-
-    handle = CreateFileW(
-        str(path),
-        GENERIC_WRITE,
-        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-        None,
-        OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS,
-        None,
-    )
-
-    if handle == INVALID_HANDLE_VALUE:
-        raise ctypes.WinError(ctypes.get_last_error())
-
-    try:
-        if not SetFileTime(handle, ctypes.byref(filetime), None, ctypes.byref(filetime)):
-            raise ctypes.WinError(ctypes.get_last_error())
-    finally:
-        CloseHandle(handle)
-
-    os.utime(path, (unix_time, unix_time))
+CTRLTYPE_MC_VERSION = "1.2.0"
 
 
 # ==========================================================
 # HELPERS
 # ==========================================================
-def ensure_safe_location() -> None:
-    candidates = [
-        SCRIPT_DIR / EXE_NAME,
-        SCRIPT_DIR.parent / EXE_NAME,
-        SCRIPT_DIR.parent.parent / EXE_NAME,
-    ]
-
-    for candidate in candidates:
-        if candidate.is_file():
-            print(f"Safety check passed: found '{EXE_NAME}' at {candidate}")
-            return
-
-    raise RuntimeError(
-        f"Safety check failed. '{EXE_NAME}' was not found alongside the script, "
-        f"in the parent folder, or in the grandparent folder."
-    )
-
-
 def sha1_file(path: Path) -> str:
     digest = hashlib.sha1()
 
@@ -143,264 +78,631 @@ def sha1_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def load_metadata(csv_path: Path) -> Dict[str, int]:
-    if not csv_path.is_file():
-        raise FileNotFoundError(f"Metadata CSV not found: {csv_path}")
+def format_alpha_levels(alpha_levels: List[int]) -> str:
+    return "[" + ", ".join(str(v) for v in alpha_levels) + "]"
 
-    out: Dict[str, int] = {}
+
+def get_png_metadata(png_path: Path) -> Tuple[int, int, List[int]]:
+    with Image.open(png_path) as img:
+        width, height = img.size
+
+        if "A" in img.getbands():
+            alpha = img.getchannel("A")
+            alpha_levels = sorted(set(alpha.getdata()))
+        else:
+            alpha_levels = [255]
+
+    return width, height, alpha_levels
+
+
+def normalize_rel_dir(value: str) -> str:
+    normalized = value.replace("\\", "/").strip()
+
+    while "//" in normalized:
+        normalized = normalized.replace("//", "/")
+
+    normalized = normalized.strip("/")
+
+    if not normalized:
+        return ""
+
+    return normalized + "/"
+
+
+def parse_version_tuple(version: str) -> Tuple[int, ...]:
+    parts = version.strip().split(".")
+    out: List[int] = []
+
+    for part in parts:
+        part = part.strip()
+        if not part:
+            out.append(0)
+            continue
+
+        try:
+            out.append(int(part))
+        except ValueError as exc:
+            raise ValueError(f"Invalid version number: '{version}'") from exc
+
+    return tuple(out)
+
+
+def find_first_existing_path(candidates: List[Path]) -> Optional[Path]:
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def find_ctxr_files_under_win() -> List[Path]:
+    if not TARGET_DIR.is_dir():
+        raise RuntimeError(f"_win directory not found: {TARGET_DIR}")
+
+    ctxr_files = [p for p in TARGET_DIR.rglob("*.ctxr") if p.is_file()]
+    ctxr_files.sort(key=lambda p: str(p).lower())
+    return ctxr_files
+
+
+def find_ctxr_files_full_recursive() -> List[Path]:
+    ctxr_files = [p for p in SCRIPT_DIR.rglob("*.ctxr") if p.is_file()]
+    ctxr_files.sort(key=lambda p: str(p).lower())
+    return ctxr_files
+
+
+def load_version_dates(csv_path: Path) -> Dict[str, Tuple[str, str]]:
+    version_map: Dict[str, Tuple[str, str]] = {}
 
     with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
 
-        required_columns = {"mc_ctxr_sha1", "version_unix_time"}
+        required_columns = {"sha1", "game", "version", "first_seen_unix"}
         missing_columns = required_columns.difference(reader.fieldnames or [])
         if missing_columns:
             raise ValueError(
-                f"Metadata CSV missing required columns: {sorted(missing_columns)}"
+                f"Version dates CSV is missing required columns: {sorted(missing_columns)}"
             )
 
         for row in reader:
-            sha1_value = (row.get("mc_ctxr_sha1") or "").strip().lower()
-            version_unix_time = (row.get("version_unix_time") or "").strip()
+            sha1_value = (row.get("sha1") or "").strip().lower()
+            game = (row.get("game") or "").strip()
+            version = (row.get("version") or "").strip()
+            first_seen_unix = (row.get("first_seen_unix") or "").strip()
 
-            if not sha1_value or not version_unix_time:
+            if not sha1_value:
+                continue
+
+            origin_version = f"{game} {version}".strip()
+            version_map[sha1_value] = (origin_version, first_seen_unix)
+
+    return version_map
+
+
+def load_manual_bp_remade_stems(txt_path: Path) -> Set[str]:
+    stems: Set[str] = set()
+
+    with txt_path.open("r", encoding="utf-8-sig", newline="") as f:
+        for line in f:
+            stem = line.strip().lower()
+
+            if not stem:
+                continue
+
+            if stem.startswith("#"):
+                continue
+
+            stems.add(stem)
+
+    return stems
+
+
+def load_mc_tri_dumped_metadata(
+    csv_path: Path,
+) -> Dict[str, Dict[str, int]]:
+    metadata_map: Dict[str, Dict[str, int]] = {}
+
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+
+        required_columns = {
+            "texture_name",
+            "mc_tri_dumped_width",
+            "mc_tri_height",
+            "mc_tri_width_ciel2",
+            "mc_tri_height_ciel2",
+        }
+        missing_columns = required_columns.difference(reader.fieldnames or [])
+        if missing_columns:
+            raise ValueError(
+                f"MC tri-dumped metadata CSV is missing required columns: {sorted(missing_columns)}"
+            )
+
+        for row in reader:
+            texture_name = (row.get("texture_name") or "").strip().lower()
+            raw_width_str = (row.get("mc_tri_dumped_width") or "").strip()
+            raw_height_str = (row.get("mc_tri_height") or "").strip()
+            ciel_width_str = (row.get("mc_tri_width_ciel2") or "").strip()
+            ciel_height_str = (row.get("mc_tri_height_ciel2") or "").strip()
+
+            if (
+                not texture_name
+                or not raw_width_str
+                or not raw_height_str
+                or not ciel_width_str
+                or not ciel_height_str
+            ):
                 continue
 
             try:
-                unix_time = int(version_unix_time)
+                raw_width = int(raw_width_str)
+                raw_height = int(raw_height_str)
+                ciel_width = int(ciel_width_str)
+                ciel_height = int(ciel_height_str)
             except ValueError as exc:
                 raise ValueError(
-                    f"Invalid version_unix_time '{version_unix_time}' for sha1 '{sha1_value}'"
+                    f"Invalid MC tri-dumped metadata dimensions for '{texture_name}': "
+                    f"raw=({raw_width_str}, {raw_height_str}), "
+                    f"ciel2=({ciel_width_str}, {ciel_height_str})"
                 ) from exc
 
-            out[sha1_value] = unix_time
+            metadata_map[texture_name] = {
+                "mc_tri_dumped_width": raw_width,
+                "mc_tri_height": raw_height,
+                "mc_tri_width_ciel2": ciel_width,
+                "mc_tri_height_ciel2": ciel_height,
+            }
 
-    return out
-
-
-def find_files_to_scan() -> List[Path]:
-    excluded_paths = {
-        METADATA_CSV.resolve(),
-        Path(__file__).resolve(),
-        LOG_MATCHED.resolve(),
-        LOG_FAILED.resolve(),
-    }
-
-    files: List[Path] = []
-
-    for path in SCRIPT_DIR.rglob("*"):
-        if not path.is_file():
-            continue
-
-        try:
-            resolved = path.resolve()
-        except OSError:
-            resolved = path
-
-        if resolved in excluded_paths:
-            continue
-
-        files.append(path)
-
-    files.sort(key=lambda p: str(p).lower())
-    return files
+    return metadata_map
 
 
-def relpath_str(path: Path) -> str:
-    try:
-        return path.relative_to(SCRIPT_DIR).as_posix()
-    except ValueError:
-        return str(path)
+def load_mc_version_dates(csv_path: Path) -> Dict[str, str]:
+    version_date_map: Dict[str, str] = {}
 
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
 
-# ==========================================================
-# PROGRESS
-# ==========================================================
-class ProgressState:
-    def __init__(self, total: int) -> None:
-        self.total = total
-        self.processed = 0
-        self.matched = 0
-        self.updated = 0
-        self.failed = 0
-        self._lock = threading.Lock()
-        self._start = time.time()
-
-    def increment_processed(self) -> None:
-        with self._lock:
-            self.processed += 1
-
-    def increment_matched(self) -> None:
-        with self._lock:
-            self.matched += 1
-
-    def increment_updated(self) -> None:
-        with self._lock:
-            self.updated += 1
-
-    def increment_failed(self) -> None:
-        with self._lock:
-            self.failed += 1
-
-    def snapshot(self) -> Tuple[int, int, int, int, int, float]:
-        with self._lock:
-            elapsed = time.time() - self._start
-            return (
-                self.total,
-                self.processed,
-                self.matched,
-                self.updated,
-                self.failed,
-                elapsed,
+        required_columns = {"version_number", "unix_hex_time"}
+        missing_columns = required_columns.difference(reader.fieldnames or [])
+        if missing_columns:
+            raise ValueError(
+                f"MC version dates CSV is missing required columns: {sorted(missing_columns)}"
             )
 
+        for row in reader:
+            version_number = (row.get("version_number") or "").strip()
+            unix_hex_time = (row.get("unix_hex_time") or "").strip()
 
-def progress_worker(state: ProgressState, stop_event: threading.Event) -> None:
-    while not stop_event.wait(PROGRESS_INTERVAL_SECONDS):
-        total, processed, matched, updated, failed, elapsed = state.snapshot()
+            if not version_number:
+                continue
 
-        rate = processed / elapsed if elapsed > 0 else 0.0
-        remaining = total - processed
-        eta_seconds = remaining / rate if rate > 0 else 0.0
+            if not unix_hex_time:
+                raise ValueError(
+                    f"Missing unix_hex_time for MC version '{version_number}'"
+                )
 
-        print(
-            f"Processed {processed}/{total} | "
-            f"Matched {matched} | "
-            f"Updated {updated} | "
-            f"Failed {failed} | "
-            f"ETA {eta_seconds:.1f}s"
-        )
+            try:
+                unix_time = str(int(unix_hex_time, 16))
+            except ValueError as exc:
+                raise ValueError(
+                    f"Invalid unix_hex_time '{unix_hex_time}' for version '{version_number}'"
+                ) from exc
+
+            version_date_map[version_number] = unix_time
+
+    return version_date_map
 
 
-# ==========================================================
-# WORKER
-# ==========================================================
-def process_file(
-    path: Path,
-    sha1_to_unix: Dict[str, int],
-) -> Dict[str, Optional[str]]:
-    sha1_value = sha1_file(path).lower()
-    unix_time = sha1_to_unix.get(sha1_value)
+def load_mc_texture_update_versions(
+    csv_path: Path,
+    mc_version_date_map: Dict[str, str],
+) -> Dict[Tuple[str, str], Tuple[str, str]]:
+    latest_map: Dict[Tuple[str, str], Tuple[str, str]] = {}
+    latest_version_tuples: Dict[Tuple[str, str], Tuple[int, ...]] = {}
 
-    if unix_time is None:
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+
+        required_columns = {"file_name", "version_number", "relative_path"}
+        missing_columns = required_columns.difference(reader.fieldnames or [])
+        if missing_columns:
+            raise ValueError(
+                f"MC texture update versions CSV is missing required columns: {sorted(missing_columns)}"
+            )
+
+        for row in reader:
+            file_name = (row.get("file_name") or "").strip().lower()
+            version_number = (row.get("version_number") or "").strip()
+            relative_path = normalize_rel_dir(row.get("relative_path") or "")
+
+            if not file_name and not version_number and not relative_path:
+                continue
+
+            if not file_name or not version_number:
+                continue
+
+            unix_time = mc_version_date_map.get(version_number)
+            if unix_time is None:
+                raise ValueError(
+                    f"Version '{version_number}' from MC texture update CSV "
+                    f"was not found in MC version dates CSV"
+                )
+
+            key = (file_name, relative_path)
+            version_tuple = parse_version_tuple(version_number)
+            existing_version_tuple = latest_version_tuples.get(key)
+
+            if existing_version_tuple is None or version_tuple > existing_version_tuple:
+                latest_version_tuples[key] = version_tuple
+                latest_map[key] = (version_number, unix_time)
+
+    return latest_map
+
+
+def get_ctxr_relative_parent_dir(ctxr_path: Path) -> str:
+    parent_relative = ctxr_path.parent.relative_to(SCRIPT_DIR).as_posix()
+    return normalize_rel_dir(parent_relative)
+
+
+def maybe_load_version_map() -> Dict[str, Tuple[str, str]]:
+    if not VERSION_DATES_CSV.is_file():
+        print(f"Optional metadata missing, skipping SHA1 version map: {VERSION_DATES_CSV}")
+        return {}
+
+    version_map = load_version_dates(VERSION_DATES_CSV)
+    print(f"Loaded {len(version_map)} SHA1 version mappings from: {VERSION_DATES_CSV}")
+    return version_map
+
+
+def maybe_load_tri_metadata_map() -> Dict[str, Dict[str, int]]:
+    if not MC_TRI_DUMPED_METADATA_CSV.is_file():
+        print(f"Optional metadata missing, skipping tri metadata: {MC_TRI_DUMPED_METADATA_CSV}")
+        return {}
+
+    tri_metadata_map = load_mc_tri_dumped_metadata(MC_TRI_DUMPED_METADATA_CSV)
+    print(f"Loaded {len(tri_metadata_map)} MC tri-dumped metadata mappings from: {MC_TRI_DUMPED_METADATA_CSV}")
+    return tri_metadata_map
+
+
+def maybe_load_manual_bp_remade_stems() -> Set[str]:
+    if not MANUAL_BP_REMADE_TXT.is_file():
+        print(f"Optional metadata missing, skipping manual BP remade list: {MANUAL_BP_REMADE_TXT}")
+        return set()
+
+    stems = load_manual_bp_remade_stems(MANUAL_BP_REMADE_TXT)
+    print(f"Loaded {len(stems)} manually identified BP remade stems from: {MANUAL_BP_REMADE_TXT}")
+    return stems
+
+
+def maybe_load_mc_update_metadata() -> Tuple[Dict[str, str], Dict[Tuple[str, str], Tuple[str, str]]]:
+    mc_version_dates_path = find_first_existing_path(MC_VERSION_DATES_CANDIDATES)
+    mc_texture_updates_path = find_first_existing_path(MC_TEXTURE_UPDATE_VERSIONS_CANDIDATES)
+
+    if mc_version_dates_path is None or mc_texture_updates_path is None:
+        if mc_version_dates_path is None:
+            print("Optional metadata missing, skipping MC version dates CSV.")
+        if mc_texture_updates_path is None:
+            print("Optional metadata missing, skipping MC texture update versions CSV.")
+        return {}, {}
+
+    mc_version_date_map = load_mc_version_dates(mc_version_dates_path)
+    print(f"Loaded {len(mc_version_date_map)} MC version date mappings from: {mc_version_dates_path}")
+
+    mc_update_map = load_mc_texture_update_versions(
+        mc_texture_updates_path,
+        mc_version_date_map,
+    )
+    print(f"Loaded {len(mc_update_map)} MC texture update mappings from: {mc_texture_updates_path}")
+
+    return mc_version_date_map, mc_update_map
+
+
+def process_ctxr(
+    ctxr_path: Path,
+    version_map: Dict[str, Tuple[str, str]],
+    tri_metadata_map: Dict[str, Dict[str, int]],
+    manual_bp_remade_stems: Set[str],
+    mc_update_map: Dict[Tuple[str, str], Tuple[str, str]],
+    mc_version_date_map: Dict[str, str],
+):
+    png_path = ctxr_path.with_suffix(".png")
+
+    if not png_path.is_file():
         return {
-            "status": "no_match",
-            "path": str(path),
-            "sha1": sha1_value,
-            "unix_time": None,
-            "error": None,
+            "status": "missing_png",
+            "ctxr_path": ctxr_path,
         }
 
-    set_file_creation_and_modified_time(path, unix_time)
+    texture_name = ctxr_path.stem
+    texture_name_lower = texture_name.lower()
+    relative_parent_dir = get_ctxr_relative_parent_dir(ctxr_path)
+    relative_parent_dir_lower = relative_parent_dir.lower()
+
+    mc_ctxr_sha1 = sha1_file(ctxr_path)
+    mc_resaved_sha1 = sha1_file(png_path)
+    mc_width, mc_height, alpha_levels = get_png_metadata(png_path)
+
+    origin_version = ""
+    version_unix_time = ""
+    bp_remade = False
+    pc_equal_dims_log_entry = None
+
+    tri_meta = tri_metadata_map.get(texture_name_lower)
+    raw_width: Optional[int] = None
+    raw_height: Optional[int] = None
+    ciel_width: Optional[int] = None
+    ciel_height: Optional[int] = None
+
+    if tri_meta is not None:
+        raw_width = tri_meta["mc_tri_dumped_width"]
+        raw_height = tri_meta["mc_tri_height"]
+        ciel_width = tri_meta["mc_tri_width_ciel2"]
+        ciel_height = tri_meta["mc_tri_height_ciel2"]
+
+    # Priority 1: Master Collection explicit texture/version map
+    mc_update_info = mc_update_map.get((texture_name_lower, relative_parent_dir))
+    if mc_update_info is not None:
+        mc_version_number, mc_unix_time = mc_update_info
+        origin_version = f"Master Collection - {mc_version_number}"
+        version_unix_time = mc_unix_time
+        bp_remade = True
+
+    # Priority 2: SHA1 matches from PS2 version map
+    if not origin_version and version_map:
+        version_info = version_map.get(mc_resaved_sha1.lower())
+        if version_info is not None:
+            origin_version, version_unix_time = version_info
+
+    # Priority 3: PC inferred from ciel2 dimension match
+    if (
+        not origin_version
+        and tri_meta is not None
+        and texture_name_lower not in manual_bp_remade_stems
+        and ciel_width is not None
+        and ciel_height is not None
+    ):
+        if ciel_width == mc_width and ciel_height == mc_height:
+            origin_version = PC_ORIGIN_VERSION
+            version_unix_time = PC_VERSION_UNIX_TIME
+
+            if raw_width == ciel_width and raw_height == ciel_height:
+                pc_equal_dims_log_entry = texture_name
+
+    # Priority 3.5: ctrltype_ folders are Master Collection 1.2.0
+    if not origin_version and "ctrltype_" in relative_parent_dir_lower and mc_version_date_map:
+        ctrltype_unix_time = mc_version_date_map.get(CTRLTYPE_MC_VERSION)
+        if ctrltype_unix_time is not None:
+            origin_version = f"Master Collection - {CTRLTYPE_MC_VERSION}"
+            version_unix_time = ctrltype_unix_time
+            bp_remade = True
+
+    # Priority 4: default fallback
+    if not origin_version:
+        origin_version = HD_ORIGIN_VERSION
+        version_unix_time = HD_VERSION_UNIX_TIME
+        bp_remade = True
+
+    mismatch = False
+
+    if pc_equal_dims_log_entry is not None:
+        mismatch = True
+
+    if raw_width is not None and mc_width < raw_width:
+        mismatch = True
+
+    if raw_height is not None and mc_height < raw_height:
+        mismatch = True
 
     return {
-        "status": "matched_and_updated",
-        "path": str(path),
-        "sha1": sha1_value,
-        "unix_time": str(unix_time),
-        "error": None,
+        "status": "ok",
+        "row": (
+            texture_name,
+            mc_width,
+            mc_height,
+            format_alpha_levels(alpha_levels),
+            mc_resaved_sha1,
+            mc_ctxr_sha1,
+            origin_version,
+            version_unix_time,
+            str(bp_remade).lower(),
+            "none",
+            relative_parent_dir,
+            str(mismatch).lower(),
+        ),
+        "pc_equal_dims_log_entry": pc_equal_dims_log_entry,
     }
+
+
+def write_outputs(
+    output_csv: Path,
+    missing_png_log: Path,
+    pc_nonpow2_match_log: Path,
+    rows: List[Tuple],
+    missing_pngs: List[str],
+    pc_equal_dims_entries: List[str],
+) -> None:
+    rows.sort(key=lambda row: (row[0].lower(), row[10].lower()))
+    missing_pngs.sort(key=str.lower)
+    pc_equal_dims_entries.sort(key=str.lower)
+
+    with output_csv.open("w", encoding="utf-8", newline="\n") as f:
+        writer = csv.writer(f, lineterminator="\n")
+        writer.writerow(
+            [
+                "texture_name",
+                "mc_width",
+                "mc_height",
+                "mc_alpha_levels",
+                "mc_resaved_sha1",
+                "mc_ctxr_sha1",
+                "origin_version",
+                "version_unix_time",
+                "bp_remade",
+                "region_specific",
+                "relative_path",
+                "mismatch",
+            ]
+        )
+        writer.writerows(rows)
+
+    if missing_pngs:
+        with missing_png_log.open("w", encoding="utf-8", newline="\n") as f:
+            for path in missing_pngs:
+                f.write(path + "\n")
+    else:
+        if missing_png_log.exists():
+            missing_png_log.unlink()
+
+    if pc_equal_dims_entries:
+        with pc_nonpow2_match_log.open("w", encoding="utf-8", newline="\n") as f:
+            for entry in pc_equal_dims_entries:
+                f.write(entry + "\n")
+    else:
+        if pc_nonpow2_match_log.exists():
+            pc_nonpow2_match_log.unlink()
+
+
+def process_dataset(
+    label: str,
+    ctxr_files: List[Path],
+    version_map: Dict[str, Tuple[str, str]],
+    tri_metadata_map: Dict[str, Dict[str, int]],
+    manual_bp_remade_stems: Set[str],
+    mc_update_map: Dict[Tuple[str, str], Tuple[str, str]],
+    mc_version_date_map: Dict[str, str],
+    output_csv: Path,
+    missing_png_log: Path,
+    pc_nonpow2_match_log: Path,
+) -> int:
+    if not ctxr_files:
+        print(f"No .ctxr files found for dataset: {label}")
+
+        if output_csv.exists():
+            output_csv.unlink()
+
+        if missing_png_log.exists():
+            missing_png_log.unlink()
+
+        if pc_nonpow2_match_log.exists():
+            pc_nonpow2_match_log.unlink()
+
+        return 0
+
+    print(f"[{label}] Found {len(ctxr_files)} .ctxr files to process.")
+
+    rows: List[Tuple] = []
+    missing_pngs: List[str] = []
+    pc_equal_dims_entries: List[str] = []
+    failures = 0
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = [
+            executor.submit(
+                process_ctxr,
+                ctxr_path,
+                version_map,
+                tri_metadata_map,
+                manual_bp_remade_stems,
+                mc_update_map,
+                mc_version_date_map,
+            )
+            for ctxr_path in ctxr_files
+        ]
+
+        total = len(futures)
+
+        for index, future in enumerate(as_completed(futures), 1):
+            try:
+                result = future.result()
+
+                if result["status"] == "ok":
+                    rows.append(result["row"])
+
+                    pc_equal_dims_log_entry = result.get("pc_equal_dims_log_entry")
+                    if pc_equal_dims_log_entry:
+                        pc_equal_dims_entries.append(pc_equal_dims_log_entry)
+
+                elif result["status"] == "missing_png":
+                    missing_pngs.append(str(result["ctxr_path"]))
+            except Exception as exc:
+                failures += 1
+                print(f"[{label}] Failed: {exc}")
+
+            if index % 1000 == 0 or index == total:
+                print(f"[{label}] Processed {index}/{total}")
+
+    write_outputs(
+        output_csv=output_csv,
+        missing_png_log=missing_png_log,
+        pc_nonpow2_match_log=pc_nonpow2_match_log,
+        rows=rows,
+        missing_pngs=missing_pngs,
+        pc_equal_dims_entries=pc_equal_dims_entries,
+    )
+
+    print()
+    print(f"[{label}] Wrote {len(rows)} rows to: {output_csv}")
+    print(f"[{label}] Missing matching PNGs: {len(missing_pngs)}")
+    print(f"[{label}] PC raw dims == ciel2 entries: {len(pc_equal_dims_entries)}")
+
+    return failures
 
 
 # ==========================================================
 # MAIN
 # ==========================================================
 def main() -> int:
-    ensure_safe_location()
-
-    sha1_to_unix = load_metadata(METADATA_CSV)
-    print(f"Loaded {len(sha1_to_unix)} mc_ctxr_sha1 -> version_unix_time mappings.")
-
-    files = find_files_to_scan()
-    if not files:
-        print("No files found under the script folder.")
-        if LOG_MATCHED.exists():
-            LOG_MATCHED.unlink()
-        if LOG_FAILED.exists():
-            LOG_FAILED.unlink()
-        return 0
-
-    print(f"Found {len(files)} files to scan.")
-    print(f"Using {MAX_WORKERS} worker threads.")
-
-    state = ProgressState(total=len(files))
-    stop_event = threading.Event()
-    progress_thread = threading.Thread(
-        target=progress_worker,
-        args=(state, stop_event),
-        daemon=True,
-    )
-    progress_thread.start()
-
-    matched_lines: List[str] = []
-    failed_lines: List[str] = []
-
-    try:
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            futures = {
-                executor.submit(process_file, path, sha1_to_unix): path
-                for path in files
-            }
-
-            for future in as_completed(futures):
-                path = futures[future]
-
-                try:
-                    result = future.result()
-
-                    if result["status"] == "matched_and_updated":
-                        state.increment_matched()
-                        state.increment_updated()
-                        matched_lines.append(
-                            f"{relpath_str(path)},{result['sha1']},{result['unix_time']}"
-                        )
-
-                except Exception as exc:
-                    state.increment_failed()
-                    failed_lines.append(f"{relpath_str(path)},{exc}")
-
-                finally:
-                    state.increment_processed()
-
-    finally:
-        stop_event.set()
-        progress_thread.join()
-
-    matched_lines.sort(key=str.lower)
-    failed_lines.sort(key=str.lower)
-
-    if matched_lines:
-        with LOG_MATCHED.open("w", encoding="utf-8", newline="\n") as f:
-            for line in matched_lines:
-                f.write(line + "\n")
-    else:
-        if LOG_MATCHED.exists():
-            LOG_MATCHED.unlink()
-
-    if failed_lines:
-        with LOG_FAILED.open("w", encoding="utf-8", newline="\n") as f:
-            for line in failed_lines:
-                f.write(line + "\n")
-    else:
-        if LOG_FAILED.exists():
-            LOG_FAILED.unlink()
-
-    total, processed, matched, updated, failed, elapsed = state.snapshot()
+    version_map = maybe_load_version_map()
+    tri_metadata_map = maybe_load_tri_metadata_map()
+    manual_bp_remade_stems = maybe_load_manual_bp_remade_stems()
+    mc_version_date_map, mc_update_map = maybe_load_mc_update_metadata()
 
     print()
-    print(f"Processed: {processed}/{total}")
-    print(f"Matched:   {matched}")
-    print(f"Updated:   {updated}")
-    print(f"Failed:    {failed}")
-    print(f"Elapsed:   {elapsed:.2f}s")
+    print("Metadata availability summary:")
+    print(f"  SHA1 version map loaded: {'yes' if version_map else 'no'}")
+    print(f"  Tri metadata loaded: {'yes' if tri_metadata_map else 'no'}")
+    print(f"  Manual BP remade stems loaded: {'yes' if manual_bp_remade_stems else 'no'}")
+    print(f"  MC version dates loaded: {'yes' if mc_version_date_map else 'no'}")
+    print(f"  MC texture update map loaded: {'yes' if mc_update_map else 'no'}")
+    print("  Unmatched files will default to HD Collection (PS3).")
+    print()
 
-    if matched_lines:
-        print(f"Wrote matched log: {LOG_MATCHED}")
+    win_only_ctxr_files = find_ctxr_files_under_win()
+    full_recursive_ctxr_files = find_ctxr_files_full_recursive()
 
-    if failed_lines:
-        print(f"Wrote failure log: {LOG_FAILED}")
+    failures = 0
 
-    if failed:
+    failures += process_dataset(
+        label="WIN_ONLY",
+        ctxr_files=win_only_ctxr_files,
+        version_map=version_map,
+        tri_metadata_map=tri_metadata_map,
+        manual_bp_remade_stems=manual_bp_remade_stems,
+        mc_update_map=mc_update_map,
+        mc_version_date_map=mc_version_date_map,
+        output_csv=OUTPUT_CSV_WIN_ONLY,
+        missing_png_log=MISSING_PNG_LOG_WIN_ONLY,
+        pc_nonpow2_match_log=PC_NONPOW2_MATCH_LOG_WIN_ONLY,
+    )
+
+    print()
+    print("=" * 72)
+    print()
+
+    failures += process_dataset(
+        label="FULL_RECURSIVE",
+        ctxr_files=full_recursive_ctxr_files,
+        version_map=version_map,
+        tri_metadata_map=tri_metadata_map,
+        manual_bp_remade_stems=manual_bp_remade_stems,
+        mc_update_map=mc_update_map,
+        mc_version_date_map=mc_version_date_map,
+        output_csv=OUTPUT_CSV_FULL_RECURSIVE,
+        missing_png_log=MISSING_PNG_LOG_FULL_RECURSIVE,
+        pc_nonpow2_match_log=PC_NONPOW2_MATCH_LOG_FULL_RECURSIVE,
+    )
+
+    print()
+    if failures:
+        print(f"Completed with {failures} failure(s).")
         return 1
 
     print("Done.")

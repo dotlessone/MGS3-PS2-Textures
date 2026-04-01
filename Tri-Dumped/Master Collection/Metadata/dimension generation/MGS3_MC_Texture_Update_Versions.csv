@@ -44,15 +44,15 @@ konami_4k,2.0.0,Misc/splashscreen/_win/
 konami_fhd,2.0.0,Misc/splashscreen/_win/
 konami_wqhd,2.0.0,Misc/splashscreen/_win/
 
-mgs3_keycon_arrow_l,2.0.0,_win/
-mgs3_keycon_arrow_r,2.0.0,_win/
-mgs3_keycon_check,2.0.0,_win/
-mgs3_keycon_list_base_00,2.0.0,_win/
-mgs3_keycon_list_base_01,2.0.0,_win/
-mgs3_keycon_list_base_03,2.0.0,_win/
-mgs3_keycon_list_base_04,2.0.0,_win/
-mgs3_keycon_list_base_05,2.0.0,_win/
-mgs3_keycon_type_base_00,2.0.0,_win/
+mgs2_keycon_arrow_l,2.0.0,_win/
+mgs2_keycon_arrow_r,2.0.0,_win/
+mgs2_keycon_check,2.0.0,_win/
+mgs2_keycon_list_base_00,2.0.0,_win/
+mgs2_keycon_list_base_01,2.0.0,_win/
+mgs2_keycon_list_base_03,2.0.0,_win/
+mgs2_keycon_list_base_04,2.0.0,_win/
+mgs2_keycon_list_base_05,2.0.0,_win/
+mgs2_keycon_type_base_00,2.0.0,_win/
 00999367.img,2.0.0,ovr_stm/ctrltype_kbd/type_a/_win/
 00e786c5.img,2.0.0,ovr_stm/ctrltype_kbd/type_a/_win/
 00999367.img,2.0.0,ovr_stm/ctrltype_kbd/type_b/_win/

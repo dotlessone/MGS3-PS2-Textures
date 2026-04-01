@@ -9,7 +9,7 @@ from typing import Dict, List, Set, Tuple, Iterable
 # ==========================================================
 # CONFIG
 # ==========================================================
-CSV_NAME = "mgs2_texture_strcode_mappings.csv"  # put your csv name here
+CSV_NAME = "mgs3_texture_strcode_mappings.csv"  # put your csv name here
 
 # Columns that form the "combination"
 KEY_COLUMNS = [

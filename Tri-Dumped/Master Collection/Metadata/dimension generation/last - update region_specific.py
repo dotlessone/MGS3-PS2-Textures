@@ -8,8 +8,8 @@ from typing import List, Dict
 SCRIPT_DIR = Path(__file__).resolve().parent
 
 CSV_FILES = [
-    SCRIPT_DIR / "mgs3_mc_dimensions.csv",
-    SCRIPT_DIR / "mgs3_mc_dimensions_including_override_folders.csv",
+    SCRIPT_DIR / "mgs2_mc_dimensions.csv",
+    SCRIPT_DIR / "mgs2_mc_dimensions_including_override_folders.csv",
 ]
 
 LOG_FILE = SCRIPT_DIR / "region_specific_japan_only_updates.txt"
