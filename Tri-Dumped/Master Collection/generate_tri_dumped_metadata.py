@@ -3,6 +3,8 @@ from __future__ import annotations
 import csv
 import hashlib
 import os
+import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Iterable
@@ -18,6 +20,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 OUTPUT_CSV = SCRIPT_DIR / "Metadata" / "mgs3_mc_tri_dumped_metadata.csv"
 ALPHA_ONLY_0_CSV = SCRIPT_DIR / "Metadata" / "alpha_only_0.csv"
 ALPHA_GT_128_CSV = SCRIPT_DIR / "Metadata" / "alpha_gt_128.csv"
+
+POST_SCRIPT = Path(r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\generate_tri_dates.py")
 
 MAX_WORKERS = max(4, os.cpu_count() or 4)
 SHA1_BUFFER_SIZE = 8 * 1024 * 1024
@@ -80,6 +84,8 @@ def iter_pngs(folder: Path) -> Iterable[Path]:
 
 
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(
             f,
@@ -100,6 +106,23 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
             row_copy = dict(row)
             row_copy["mc_tri_dumped_alpha_levels"] = str(row_copy["mc_tri_dumped_alpha_levels"])
             writer.writerow(row_copy)
+
+
+def run_post_script() -> None:
+    if not POST_SCRIPT.exists():
+        raise RuntimeError(f"Post script not found: {POST_SCRIPT}")
+
+    print(f"\n[POST] Running: {POST_SCRIPT}")
+
+    result = subprocess.run(
+        [sys.executable, str(POST_SCRIPT)],
+        cwd=POST_SCRIPT.parent,
+    )
+
+    if result.returncode != 0:
+        raise RuntimeError(f"Post script failed with exit code {result.returncode}")
+
+    print("[POST] Completed successfully")
 
 
 # ==========================================================
@@ -159,6 +182,13 @@ def main() -> int:
         print(f"\nErrors: {len(errors)}")
         for path, msg in errors:
             print(f"{path.name}: {msg}")
+        return 1
+
+    # Run post-processing script
+    try:
+        run_post_script()
+    except Exception as e:
+        print(f"\n[POST ERROR] {e}")
         return 1
 
     return 0
