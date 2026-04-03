@@ -12,12 +12,14 @@ from typing import Dict, List, Set, Tuple
 
 
 REQUIRED_COMPILATION_DATES = "Compilation Dates.csv"
-EARLIEST_OUTPUT_CSV = "sha1_earliest_versions.csv"
-MISSING_MC_OUTPUT_CSV = "missing_mc_sha1s.csv"
 MAX_WORKERS = max(4, os.cpu_count() or 4)
 
 METADATA_CSV = Path(
     r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs3_mc_tri_dumped_metadata.csv"
+)
+
+OUTPUT_CSV = Path(
+    r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs3_ps2_sha1_version_dates.csv"
 )
 
 BLASTLIST = {
@@ -26,6 +28,10 @@ BLASTLIST = {
 }
 
 PRINT_LOADS = True
+
+MISSING_MC_FALLBACK_GAME = "Substance"
+MISSING_MC_FALLBACK_VERSION = "IMG"
+MISSING_MC_FALLBACK_UNIX = 1133409166
 
 
 @dataclass(frozen=True)
@@ -217,8 +223,8 @@ def load_metadata_sha1s(csv_path: Path) -> Dict[str, str]:
 
 def main() -> int:
     script_dir = Path(__file__).resolve().parent
-    earliest_output_csv_path = script_dir / EARLIEST_OUTPUT_CSV
-    missing_mc_output_csv_path = script_dir / MISSING_MC_OUTPUT_CSV
+
+    OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
 
     all_subfolders: List[Path] = sorted(
         path.resolve()
@@ -291,35 +297,36 @@ def main() -> int:
     if read_errors:
         raise RuntimeError("\n".join(read_errors))
 
+    missing_mc_sha1s = metadata_sha1s - all_loaded_sha1s
+    synthetic_dt_utc = datetime.fromtimestamp(MISSING_MC_FALLBACK_UNIX, tz=timezone.utc)
+
+    for sha1 in missing_mc_sha1s:
+        if sha1 not in earliest_by_sha1:
+            earliest_by_sha1[sha1] = VersionInfo(
+                game=MISSING_MC_FALLBACK_GAME,
+                region=MISSING_MC_FALLBACK_VERSION,
+                compilation_dt_utc=synthetic_dt_utc,
+                compilation_unix=MISSING_MC_FALLBACK_UNIX,
+                sha1_txt_path=Path("N/A"),
+            )
+
     earliest_rows = [
         (sha1, v.game, v.region, v.compilation_unix)
         for sha1, v in earliest_by_sha1.items()
     ]
     earliest_rows.sort()
 
-    with earliest_output_csv_path.open("w", encoding="utf-8", newline="\n") as handle:
+    with OUTPUT_CSV.open("w", encoding="utf-8", newline="\n") as handle:
         writer = csv.writer(handle, lineterminator="\n")
         writer.writerow(["sha1", "game", "version", "first_seen_unix"])
         writer.writerows(earliest_rows)
 
-    missing_mc_sha1s = metadata_sha1s - all_loaded_sha1s
-
     print()
-    print(f"Wrote {len(earliest_rows)} unique SHA1 rows to: {earliest_output_csv_path}")
-
-    if missing_mc_sha1s:
-        rows = [(metadata_map[s], s) for s in sorted(missing_mc_sha1s)]
-
-        with missing_mc_output_csv_path.open("w", encoding="utf-8", newline="\n") as handle:
-            writer = csv.writer(handle, lineterminator="\n")
-            writer.writerow(["texture_name", "sha1"])
-            writer.writerows(rows)
-
-        print(f"Wrote {len(rows)} missing MC SHA1 rows to: {missing_mc_output_csv_path}")
-    else:
-        if missing_mc_output_csv_path.exists():
-            missing_mc_output_csv_path.unlink()
-        print("No missing MC SHA1s found.")
+    print(f"Wrote {len(earliest_rows)} unique SHA1 rows to: {OUTPUT_CSV}")
+    print(
+        f"Injected {len(missing_mc_sha1s)} missing MC SHA1 rows as "
+        f"{MISSING_MC_FALLBACK_GAME}/{MISSING_MC_FALLBACK_VERSION}."
+    )
 
     return 0
 
