@@ -39,22 +39,18 @@ MANUAL_BP_REMADE_TXT = Path(
 )
 
 MC_VERSION_DATES_CANDIDATES = [
-    SCRIPT_DIR / "MC_Version_Dates.csv",
-    SCRIPT_DIR / "MGS3_MC_Version_Dates.csv",
     SCRIPT_DIR / "MGS3_MC_Version_Dates.csv",
 ]
 
 MC_TEXTURE_UPDATE_VERSIONS_CANDIDATES = [
-    SCRIPT_DIR / "MC_Texture_Update_Versions.csv",
-    SCRIPT_DIR / "MGS3_MC_Texture_Update_Versions.csv",
     SCRIPT_DIR / "MGS3_MC_Texture_Update_Versions.csv",
 ]
 
 MAX_WORKERS = max(4, os.cpu_count() or 1)
 HASH_CHUNK_SIZE = 8 * 1024 * 1024
 
-PC_ORIGIN_VERSION = "Substance (PC)"
-PC_VERSION_UNIX_TIME = "1045766390"
+PC_ORIGIN_VERSION = "Subsistance (IMG)"
+PC_VERSION_UNIX_TIME = "1133409166"
 
 HD_ORIGIN_VERSION = "HD Collection (PS3)"
 HD_VERSION_UNIX_TIME = "1318534422"
