@@ -547,45 +547,6 @@ def remove_empty_directories(root: Path) -> Tuple[int, List[str], List[str]]:
     return removed, logs, errors
 
 
-def set_region_root_png_times(
-    region_folder: Path,
-    target_timestamp: float,
-    progress: ProgressTracker,
-) -> Tuple[int, List[str], List[str]]:
-    pngs = sorted(
-        path for path in region_folder.glob("*.png")
-        if path.is_file()
-    )
-
-    logs: List[str] = []
-    errors: List[str] = []
-
-    if not pngs:
-        return 0, logs, errors
-
-    progress.start("Setting root PNG dates", len(pngs))
-
-    with ThreadPoolExecutor(max_workers=min(MAX_WORKERS, len(pngs))) as executor:
-        future_map = {
-            executor.submit(set_file_times, path, target_timestamp): path
-            for path in pngs
-        }
-
-        for future in as_completed(future_map):
-            path = future_map[future]
-
-            try:
-                future.result()
-                logs.append(f"[SET DATE] {path}")
-            except Exception as exc:
-                errors.append(f"Failed to set dates on {path}: {exc}")
-
-            progress.advance()
-
-    progress.finish()
-    return len(pngs), logs, errors
-
-
 def process_region_folder(
     region_folder: Path,
     region_timestamp: float,
@@ -672,9 +633,10 @@ def process_region_folder(
             try:
                 ensure_parent_dir(dest_path)
                 shutil.copy2(str(primary_source), str(dest_path))
+                set_file_times(dest_path, region_timestamp)
                 completed_copies += 1
             except Exception as exc:
-                errors.append(f"Failed to copy {primary_source} -> {dest_path}: {exc}")
+                errors.append(f"Failed to copy/set dates {primary_source} -> {dest_path}: {exc}")
                 all_targets_ok = False
 
         if all_targets_ok:
@@ -689,15 +651,6 @@ def process_region_folder(
         progress.advance()
 
     progress.finish()
-
-    root_png_count, date_logs, date_errors = set_region_root_png_times(
-        region_folder=region_folder,
-        target_timestamp=region_timestamp,
-        progress=progress,
-    )
-    logs.extend(date_logs)
-    errors.extend(date_errors)
-    logs.append(f"[ROOT DATE SYNC] Set modified/creation dates on {root_png_count} root PNG(s)")
 
     removed_dirs, dir_logs, dir_errors = remove_empty_directories(region_folder)
     logs.extend(dir_logs)
@@ -719,7 +672,6 @@ def process_region_folder(
         f"{matched_file_count} matched source file(s), "
         f"{completed_copies} completed cop(y/ies), "
         f"{deleted_sources} deleted source file(s), "
-        f"{root_png_count} root PNG date(s) synced, "
         f"{removed_dirs} empty folder(s) removed"
     )
 
