@@ -1,39 +1,31 @@
-# FAQ
-**Question:** 
+# MGS3 PS2 Tri-Dumped Textures
 
-Why is this needed?
+All .tri textures from all PS2 versions of MGS3, dumps and resturctured for use with mod development with the MGS Master Collection.
 
-**Answer:** 
 
-The vast majority of textures in the original PS2 version of MGS3 had dimensions that were not a power of 2, ie 2, 4, 8, 16, 32, 64, 128, 256, 512, ect. 
+## Progress:
+All .tri files from every version are presently dumped.
 
-Early DirectX & OpenGL rendering did not support textures with non-^2 dimensions (referred to as arbitrary dimension textures, or [NPOT Textures](https://www.khronos.org/opengl/wiki/NPOT_Texture)) until OpenGL 2.0's release in 2004 which added the ARB_texture_non_power_of_two extension, well after both ports were created, and GPU's at the time ALSO had to be upgraded to support that new OpenGL feature level. 
+### Master Collection .tri's
+	- 100% rebuilt.
+	
+### Substance: 
+	- Europe (Online Beta): 2287 / 2290 Rebuilt (MC Coverage - 100%.)
+	- Europe: 9790 / 14407 (MC Coverage - 100%.)
+	- Germany: MC Coverage - 100%.
+	- Italy: MC Coverage - 100%.
+	- Japan: MC Coverage - 100%.
+	- Japan (Shokai Seisanban): MC Coverage - 100%.
+	- Korea: 9704 / 9734 (MC Coverage - 99%. Only regional magazines/posters & UI left.)
+	- Spain: MC Coverage - 100%.
+	- USA: 9704 / 9734 (MC Coverage - 99%. Only regional magazines/posters & UI left.) (Self-Note: 1d58c1 = e02_4.bmp_e98df2b1939851f47c8a6c28ea1d4cda)
 
-To even support the majority of console & PC hardware at the time - the team that handled the ports to the Xbox & PC ran all the textures through an automatic resizer, resizing all the textures' dimensions up to the next power of 2 (for example, a 130x70 texture would be sized up to 256x128), 
-which introduced significant JPEG-type artifacting / haloing, blurred (and in some cases outright removed) fine details, and added randomly color lines along the edges of a LOT of the game's textures. 
-
-As the Xbox version of the game provided KojiPro with a DirectX based codebase for all future ports, it was the base version used by Bluepoint for the HD Remaster (hence most of the effect scaling/visual bugs present to this day in the Master Collection originating from the 2002 Xbox port), 
-and ultimately all versions of MGS3 released off of the PS2 all have this same issue with its textures.
-
-Presumably, it was simply a forgotten footnote in the game's past development cycle that never got communicated to Bluepoint - even though the textures in the Xbox port suffering from compression artifacting being a well known issue (back in the day, at least.)
-
-- As such, the primary goal of this mod is correcting the compression artifacting/pixelization present with ~85% of ALL textures by re-exporting all 15221 textures from each of the original PS2 versions of MGS3, manually identifying each texture, and fully rebuilding the game's file structure.
-- The second primary goal is identifying texturing mistakes made by Bluepoint, such as textures that Bluepoint mistakenly placed on the wrong models, and correcting them as part of my [texture fix compilation](https://www.nexusmods.com/metalgearsolid2mc/mods/52) mod.
-
-    - Example (walls with completely wrong textures used):
- ![Xxewq1c](https://github.com/user-attachments/assets/b6d91b6b-bd74-48ec-86db-82df5afee206)
- ![tM7lu5Q](https://github.com/user-attachments/assets/250be26a-97a0-438c-b6aa-638e4c39d80b)
-     - Example 2 (models that swap textures depending on what room/angle you're looking at them from:
-       ![u36oka6](https://github.com/user-attachments/assets/017b98c7-959f-4827-816d-13efcf930c17)
-       ![OSH37yK](https://github.com/user-attachments/assets/6e12644d-b528-4929-b9fe-f83224111b40)
-
-- A secondary goal of this mod ontop of simply fixing texture compression issues is also fully identifying all textures that were upscaled & remade by Bluepoint in the 2011 HD Collection/remaster. (My current estimate of the number of textures that were updated by Bluepoint sits roughly around 15%.)
-  - This allows for the creation of a MGS3 Demastered Edition texture pack - which will fully revert all of the HD remastered textures back to their original PS2 versions.
-  - This also adds a tertiary goal of backporting all remastered textures back to both PS2 versions of MGS3 via PCSX2 texture replacements packs.
-
-- Another tertiary goal is also fully identify all the texture changes that was made by Kojima Productions themselves between the original 2001 US release of Snake Eater, and the 2003 Substance releases.
-  - Several stages (such as the Shell 1 Core, B2 - Computer Room) were identified to have been fully retextured, and this allows for the creation of an OG Snake Eater texture pack - which fully returns those retextured areas back to the original state they were in for the 2001 US Snake Eater release.
- 
+### Snake Eater:
+	- All Versions: 99%. Only regional magazines/posters & UI left.
+	
+### Trial Edition:
+	- 90% done. Camos & early versions of a bunch of early face textures left.
+	
 
 -------------
 
@@ -58,39 +50,17 @@ What tools are you using for this?
 
 **Answer:**
 
+- Tri Extraction & Rebuilding
+  - MGS Tri-Dumper (self-made .tri dumping / rebuilding utility. Will be released publicly once all Snake Eater -> MC mappings have been completed.)
+
 - File Management:
-  - Funduc's Duplicate File Finder
   - Voidtool's Everything
 
 - BP_Asset / Manifest Management:
   - Visual Studio Code
   - Notepad++
 
-- Texturing:
-  - Adobe Photoshop 2025
-    - Using self-made scripts for proper UV edge padding on export due to a legacy photoshop bug with transparent textures.
-  - Adobe Substance 3D Painter
-  - Chainner
-  - Gimp
-  - Nvidia Texture Export Tool
-    - Using self-made presets for production quality Kaiser filtered mipmaps.
-    - I'm more than happy to share my preset with other modders at request!
-
 - Model Viewers:
-  - Blender
-  - Autodesk Maya
-  - Noesis Model Viewer / Exporter
-  - Jayveer's MGS3 Master Collection & PS2 Noesis plugins
+  - Jayveer's MGS3 Master Collection & PS2 Noesis plugins (personally modified to fix various corruption issues the original plugin had with ~60% of textures.)
 
-- Texture Dumping:
-  - PCSX2
-
-- CTXR Generation:
-  - 316austin316's CTXR3
-  - Jayveer's CTXRTool
-    - Using self-made batch scripts for automated mipmap generation using Nvidia's texture tool.
-
-- Other:
-  - i2ocr's Japanese Optical Character Recognition
-  - Self made tooling to automatically identify remade textures & images that area already ^2.
-  - [Self made tooling](https://github.com/ShizCalev/Resize_Images_To_Power_of_Two) to automatically resize needed images up to the next power of 2. 
+- PCSX2 for .TRI dumped texture verification.
