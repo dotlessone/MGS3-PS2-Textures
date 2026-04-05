@@ -12,7 +12,7 @@ ROOT_DIR = Path(__file__).resolve().parent
 MAX_WORKERS = min(32, (os.cpu_count() or 1) * 2)
 
 # 2005-12-01 12:52:46 GMT+09:00
-TARGET_DT = datetime(2005, 12, 1, 12, 52, 46, tzinfo=timezone(timedelta(hours=9)))
+TARGET_DT = datetime(2008, 12, 1, 12, 52, 46, tzinfo=timezone(timedelta(hours=9)))
 TARGET_TS = TARGET_DT.timestamp()
 
 # Windows constants
