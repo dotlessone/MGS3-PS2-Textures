@@ -3,3 +3,10 @@ gunship_body.bmp
 gunship_engin.bmp
 gunship_wing.bmp
 gunship_wing02.bmp
+00f1c0b1
+00040da5
+004f0fb2
+00c8c0af
+00c615d8
+00d2be51
+008d3d20
