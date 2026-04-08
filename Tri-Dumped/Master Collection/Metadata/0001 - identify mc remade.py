@@ -32,7 +32,9 @@ OUTPUT_NO_UI_TXT = Path(
     r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection\Metadata\mgs3_mc_bp_remade_textures_no_ui.txt"
 )
 
-IDENTIFY_MC_NPOTS_SCRIPT = SCRIPT_DIR / "identify mc npots.py"
+IDENTIFY_MC_NPOTS_SCRIPT = SCRIPT_DIR / "0002 - identify mc npots.py"
+
+IDENTIFY_UI_ASPECT_RATIO_SCRIPT = SCRIPT_DIR / "0003 - identify different aspect ratio ui.py"
 
 
 def normalize(name: str) -> str:
@@ -113,11 +115,27 @@ def run_identify_mc_npots() -> None:
         check=True,
         cwd=str(IDENTIFY_MC_NPOTS_SCRIPT.parent),
     )
+    
+def run_identify_aspect_ratio_ui() -> None:
+    if not IDENTIFY_UI_ASPECT_RATIO_SCRIPT.exists():
+        raise FileNotFoundError(
+            f"Required script not found: {IDENTIFY_UI_ASPECT_RATIO_SCRIPT}"
+        )
+
+    print(f"Running: {IDENTIFY_UI_ASPECT_RATIO_SCRIPT}")
+
+    subprocess.run(
+        [sys.executable, str(IDENTIFY_UI_ASPECT_RATIO_SCRIPT)],
+        check=True,
+        cwd=str(IDENTIFY_UI_ASPECT_RATIO_SCRIPT.parent),
+    )
+    
 
 
 def main() -> None:
     run_identify_mc_npots()
-
+    run_identify_aspect_ratio_ui()
+    
     mc_data = load_mc(MC_CSV)
     ps2_data = load_ps2(PS2_CSV)
 

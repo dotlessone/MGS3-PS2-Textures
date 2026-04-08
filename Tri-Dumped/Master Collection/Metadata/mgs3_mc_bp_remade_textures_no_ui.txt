@@ -899,6 +899,7 @@ grchaira_top01.bmp_cc58cf5bf64c7d2a8f2d2aad2097c60c
 grd_def_tex_bace.bmp
 grip.bmp
 guns_roter02_alp.trans.bmp
+gunship_body.bmp
 gunship_engin.bmp
 gunship_wing.bmp
 gunship_wing02.bmp

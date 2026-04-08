@@ -1,1 +1,5 @@
 wigbody01.bmp
+gunship_body.bmp
+gunship_engin.bmp
+gunship_wing.bmp
+gunship_wing02.bmp

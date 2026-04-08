@@ -1,0 +1,435 @@
+Hit stems:
+005737d5
+006fed27
+007a861b
+00b6209a
+00b76895
+00bd8f40
+00e11a3e
+
+====================================================================================================
+
+005737d5
+PS2: 512 x 400 -> MC: 1280 x 720. (Scaling factor: X=1.39, Y=1.00)
+Corrected PS2: 711 x 400 (rounded)
+
+006fed27
+PS2: 80 x 111 -> MC: 160 x 232. (Scaling factor: X=1.00, Y=1.05)
+Corrected PS2: 80 x 116
+
+007a861b
+PS2: 402 x 96 -> MC: 840 x 225. (Scaling factor: X=1.00, Y=1.12)
+Corrected PS2: 402 x 107 (rounded)
+
+00b6209a
+PS2: 512 x 400 -> MC: 1280 x 720. (Scaling factor: X=1.39, Y=1.00)
+Corrected PS2: 711 x 400 (rounded)
+
+00b76895
+PS2: 156 x 116 -> MC: 312 x 312. (Scaling factor: X=1.00, Y=1.34)
+Corrected PS2: 156 x 156
+
+00bd8f40
+PS2: 14 x 144 -> MC: 28 x 286. (Scaling factor: X=1.01, Y=1.00)
+Corrected PS2: 14 x 144 (rounded, raw reduction to 14 x 143)
+
+00e11a3e
+PS2: 402 x 96 -> MC: 1260 x 456. (Scaling factor: X=1.00, Y=1.52)
+Corrected PS2: 402 x 145 (rounded)
+
+
+####################################################################################################
+
+Previously-hit stems excluded by the multiple-of-ceil-pow2 rule:
+0000021b
+000237d1
+00031504
+0003a514
+000737d1
+00089f76
+00186029
+00266501
+002a44f7
+0032c4c8
+0033b530
+0035ce0b
+0036bd68
+003807d3
+003a0253
+003f1510
+003fa520
+004244b2
+00447c28
+0047048a
+00488d27
+004ca501
+0051f158
+005764f7
+005b44ed
+005feda9
+0066ce01
+0067bd5e
+006907c9
+006ec4d4
+00701506
+0070a516
+0078c9fe
+007e021f
+007e44be
+007ebdd7
+00807c34
+00830496
+00848d33
+008514ff
+008696f4
+0088df28
+0088f148
+008ed488
+009b9f73
+009bedb5
+009fc4ca
+00ab6026
+00af44b4
+00b17c2a
+00b4048c
+00b4ca0a
+00b58d29
+00b98532
+00ba022b
+00babde3
+00bf1537
+00c29700
+00c4df34
+00c4f154
+00c507d6
+00cad494
+00ccedab
+00d79f7f
+00e5ca00
+00e76032
+00ea64f4
+00eb0221
+00ebbdd9
+00ee44ea
+00f396f6
+00f5d860
+00f5df2a
+00f5f14a
+00f9cdfe
+00fabd5b
+00fbd48a
+00fc07c6
+
+====================================================================================================
+
+0000021b
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+000237d1
+PS2: 6 x 8 -> MC: 32 x 32. (Scaling factor: X=1.33, Y=1.00)
+Corrected PS2: 8 x 8
+
+00031504
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0003a514
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+000737d1
+PS2: 6 x 8 -> MC: 32 x 32. (Scaling factor: X=1.33, Y=1.00)
+Corrected PS2: 8 x 8
+
+00089f76
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00186029
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00266501
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+002a44f7
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0032c4c8
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0033b530
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0035ce0b
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0036bd68
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+003807d3
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+003a0253
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+003f1510
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+003fa520
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+004244b2
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00447c28
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0047048a
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00488d27
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+004ca501
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0051f158
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+005764f7
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+005b44ed
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+005feda9
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0066ce01
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0067bd5e
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+006907c9
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+006ec4d4
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00701506
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0070a516
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0078c9fe
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+007e021f
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+007e44be
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+007ebdd7
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00807c34
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00830496
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00848d33
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+008514ff
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+008696f4
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0088df28
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+0088f148
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+008ed488
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+009b9f73
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+009bedb5
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+009fc4ca
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00ab6026
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00af44b4
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00b17c2a
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00b4048c
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00b4ca0a
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00b58d29
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00b98532
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00ba022b
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00babde3
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00bf1537
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00c29700
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00c4df34
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00c4f154
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00c507d6
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00cad494
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00ccedab
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00d79f7f
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00e5ca00
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00e76032
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00ea64f4
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00eb0221
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00ebbdd9
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00ee44ea
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00f396f6
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00f5d860
+PS2: 14 x 230 -> MC: 32 x 512. (Scaling factor: X=1.03, Y=1.00)
+Corrected PS2: 14 x 230 (rounded, raw reduction to 14 x 224)
+
+00f5df2a
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00f5f14a
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00f9cdfe
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00fabd5b
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00fbd48a
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
+
+00fc07c6
+PS2: 440 x 208 -> MC: 1024 x 512. (Scaling factor: X=1.00, Y=1.06)
+Corrected PS2: 440 x 220
