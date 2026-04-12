@@ -7,6 +7,52 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from PIL import Image
 
+import random
+import time
+from datetime import datetime
+
+def set_random_1997_timestamp(path: Path) -> None:
+    # Random date in 1997
+    start = datetime(1997, 1, 1, 0, 0, 0).timestamp()
+    end   = datetime(1997, 12, 31, 23, 59, 59).timestamp()
+
+    ts = random.uniform(start, end)
+
+    # Set both modified and access time
+    os.utime(path, (ts, ts))
+
+    # Creation time (Windows only)
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        FILE_WRITE_ATTRIBUTES = 0x100
+        OPEN_EXISTING = 3
+
+        handle = ctypes.windll.kernel32.CreateFileW(
+            str(path),
+            FILE_WRITE_ATTRIBUTES,
+            0,
+            None,
+            OPEN_EXISTING,
+            0,
+            None,
+        )
+
+        if handle != -1:
+            wintime = int((ts + 11644473600) * 10_000_000)
+
+            class FILETIME(ctypes.Structure):
+                _fields_ = [("dwLowDateTime", wintypes.DWORD),
+                            ("dwHighDateTime", wintypes.DWORD)]
+
+            ft = FILETIME(wintime & 0xFFFFFFFF, wintime >> 32)
+
+            ctypes.windll.kernel32.SetFileTime(handle, ctypes.byref(ft), ctypes.byref(ft), ctypes.byref(ft))
+            ctypes.windll.kernel32.CloseHandle(handle)
+    except Exception:
+        pass
+        
 # ==========================================================
 # CONFIG
 # ==========================================================
@@ -262,6 +308,10 @@ def process_file(path: Path) -> None:
         # PATH 2: RESAVE -> POST-SAVE SHA1
         # --------------------------------------------------
         resave_png_no_optimize(path)
+
+        # NEW: randomize timestamp to 1997
+        set_random_1997_timestamp(path)
+
         post_save_sha1 = sha1_file(path)
 
         is_sha1_match = (
