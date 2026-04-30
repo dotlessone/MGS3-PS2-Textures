@@ -33,6 +33,7 @@ STRCODE_MAPPING_CSV = Path(
 
 BLASTLIST = {
     Path(r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\Master Collection").resolve(),
+    Path(r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\HD Collection").resolve(),
     Path(r"C:\Development\Git\MGS3-PS2-Textures\Tri-Dumped\todo").resolve(),
 }
 
