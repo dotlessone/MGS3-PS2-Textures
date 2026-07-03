@@ -10,3 +10,6 @@ gunship_wing02.bmp
 00c615d8
 00d2be51
 008d3d20
+
+stove_stand.bmp
+s101a_tablekit00.bmp
